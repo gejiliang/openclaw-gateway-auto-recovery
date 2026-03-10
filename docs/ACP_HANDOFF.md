@@ -27,6 +27,7 @@ Supported:
 - automatic recovery
 - structured ACP escalation bundle generation
 - explicit operator-triggered ACP runtime spawn
+- pragmatic target-local repair via local Codex wrapper when direct adapter bridging is imperfect
 
 Intentionally avoided:
 - silent watcher-triggered ACP session spawn

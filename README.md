@@ -73,6 +73,7 @@ Need a short description for GitHub, social sharing, or internal forwarding? See
 3. Read `docs/OPERATIONS.md`
 4. Read `docs/POST_UPGRADE_CHECKLIST.md`
 5. Read `docs/ACP_HANDOFF.md`
-6. Optional Chinese overview: `docs/README.zh-CN.md`
-7. Copy `recovery/gateway-v04/adapter.env.example` to your own local `adapter.env`
-8. Review all host-specific paths before enabling anything
+6. Read `docs/MODE_B_LOCAL_REPAIR.md`
+7. Optional Chinese overview: `docs/README.zh-CN.md`
+8. Copy `recovery/gateway-v04/adapter.env.example` to your own local `adapter.env`
+9. Review all host-specific paths before enabling anything

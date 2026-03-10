@@ -11,6 +11,25 @@ PLIST_PATH="$HOME/Library/LaunchAgents/${SERVICE_LABEL}.plist"
 START_WAIT_ATTEMPTS="${START_WAIT_ATTEMPTS:-30}"
 START_WAIT_SLEEP_SECONDS="${START_WAIT_SLEEP_SECONDS:-2}"
 
+ensure_runtime_secrets() {
+  local value=""
+
+  value="$($LAUNCHCTL_BIN getenv KIMI_API_KEY 2>/dev/null || true)"
+  if [[ -n "$value" ]]; then
+    return 0
+  fi
+
+  if [[ -x /bin/zsh ]]; then
+    value="$(/bin/zsh -lc 'source ~/.zshrc >/dev/null 2>&1; printf "%s" "${KIMI_API_KEY:-}"' 2>/dev/null || true)"
+    if [[ -n "$value" ]]; then
+      "$LAUNCHCTL_BIN" setenv KIMI_API_KEY "$value"
+      return 0
+    fi
+  fi
+
+  return 1
+}
+
 gateway_service_loaded_and_running() {
   local status_output=""
 
@@ -55,6 +74,8 @@ wait_for_gateway_service() {
   gateway_status_json || true
   return 1
 }
+
+ensure_runtime_secrets || true
 
 if "$LAUNCHCTL_BIN" print "$LAUNCH_TARGET" >/dev/null 2>&1; then
   start_rc=0

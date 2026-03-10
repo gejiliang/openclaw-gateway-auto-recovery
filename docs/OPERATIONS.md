@@ -137,3 +137,13 @@ If this edge breaks again, inspect:
 
 ## Governance reminder
 Cooldown and rolling attempt limits are intentional. During repeated drills or repeated failures, governed-skip results are not automatically bugs.
+
+## Env-backed provider reminder
+If Gateway or its recovery path depends on env-backed secrets, validation is not complete just because the current interactive shell can see them.
+
+You must also verify the real restart/bootstrap path can resolve the secret.
+
+A production example was `KIMI_API_KEY`:
+- shell-visible env alone was not enough
+- the LaunchAgent / launchd bootstrap path also had to inherit or recover the variable
+- startup wrappers may need a small runtime-secret recovery step before restarting Gateway

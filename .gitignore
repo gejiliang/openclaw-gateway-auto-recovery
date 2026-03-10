@@ -1,0 +1,15 @@
+# macOS
+.DS_Store
+
+# local adapter copy
+recovery/gateway-v04/adapter.env
+
+# generated state
+recovery/gateway-v04/logs/
+recovery/gateway-v04/results/
+recovery/gateway-v04/samples/
+recovery/gateway-v04/locks/
+
+# editor/temp
+*.swp
+*.tmp

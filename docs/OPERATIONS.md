@@ -143,7 +143,9 @@ If Gateway or its recovery path depends on env-backed secrets, validation is not
 
 You must also verify the real restart/bootstrap path can resolve the secret.
 
-A production example was `KIMI_API_KEY`:
+A production example was a provider API key required at Gateway startup:
 - shell-visible env alone was not enough
 - the LaunchAgent / launchd bootstrap path also had to inherit or recover the variable
 - startup wrappers may need a small runtime-secret recovery step before restarting Gateway
+
+In the sanitized reference implementation, the startup wrapper can optionally look for a secret name via `GATEWAY_REQUIRED_SECRET_ENV` and attempt lightweight runtime recovery for that env var before restart.

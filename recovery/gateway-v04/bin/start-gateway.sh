@@ -12,17 +12,20 @@ START_WAIT_ATTEMPTS="${START_WAIT_ATTEMPTS:-30}"
 START_WAIT_SLEEP_SECONDS="${START_WAIT_SLEEP_SECONDS:-2}"
 
 ensure_runtime_secrets() {
+  local secret_name="${GATEWAY_REQUIRED_SECRET_ENV:-}"
   local value=""
 
-  value="$($LAUNCHCTL_BIN getenv KIMI_API_KEY 2>/dev/null || true)"
+  [[ -n "$secret_name" ]] || return 0
+
+  value="$($LAUNCHCTL_BIN getenv "$secret_name" 2>/dev/null || true)"
   if [[ -n "$value" ]]; then
     return 0
   fi
 
   if [[ -x /bin/zsh ]]; then
-    value="$(/bin/zsh -lc 'source ~/.zshrc >/dev/null 2>&1; printf "%s" "${KIMI_API_KEY:-}"' 2>/dev/null || true)"
+    value="$(SECRET_NAME="$secret_name" /bin/zsh -lc 'source ~/.zshrc >/dev/null 2>&1; eval "printf %s \"\${$SECRET_NAME:-}\""' 2>/dev/null || true)"
     if [[ -n "$value" ]]; then
-      "$LAUNCHCTL_BIN" setenv KIMI_API_KEY "$value"
+      "$LAUNCHCTL_BIN" setenv "$secret_name" "$value"
       return 0
     fi
   fi

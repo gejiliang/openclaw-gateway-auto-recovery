@@ -35,6 +35,14 @@ The goal is not to make Gateway immortal. The goal is to make local Gateway fail
   - primary health check
 - `bin/start-gateway.sh` / `bin/stop-gateway.sh`
   - restart wrappers
+- `bin/should-escalate.sh`
+  - decide whether recovery outcome should hand off to ACP
+- `bin/generate-acp-repair-bundle.sh`
+  - package evidence into a structured repair bundle
+- `bin/launch-acp-repair.sh`
+  - generate ACP launch instructions for a bundle
+- `bin/prepare-acp-task.sh`
+  - convert a bundle into ACP task payload text for explicit runtime spawn
 
 ## Health model
 Primary truth is based on:
@@ -64,6 +72,7 @@ Need a short description for GitHub, social sharing, or internal forwarding? See
 2. Read `docs/ARCHITECTURE.md`
 3. Read `docs/OPERATIONS.md`
 4. Read `docs/POST_UPGRADE_CHECKLIST.md`
-5. Optional Chinese overview: `docs/README.zh-CN.md`
-6. Copy `recovery/gateway-v04/adapter.env.example` to your own local `adapter.env`
-7. Review all host-specific paths before enabling anything
+5. Read `docs/ACP_HANDOFF.md`
+6. Optional Chinese overview: `docs/README.zh-CN.md`
+7. Copy `recovery/gateway-v04/adapter.env.example` to your own local `adapter.env`
+8. Review all host-specific paths before enabling anything

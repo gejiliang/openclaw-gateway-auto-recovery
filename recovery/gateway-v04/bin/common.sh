@@ -15,6 +15,9 @@ if [[ "${OPENCLAW_RECOVERY_ALLOW_CLI_OVERRIDE:-0}" == "1" ]] && [[ -n "${OPENCLA
   CLI_BIN="$OPENCLAW_RECOVERY_TEST_CLI_BIN"
 fi
 
+PATH="/opt/homebrew/opt/node/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:${PATH:-}"
+export PATH
+
 ensure_recovery_dirs() {
   mkdir -p "$RECOVERY_ROOT" \
     "$ADAPTER_BIN_DIR" \
@@ -22,7 +25,24 @@ ensure_recovery_dirs() {
     "$(dirname "$EVENT_FILE")" \
     "$(dirname "$ATTEMPT_LOG")" \
     "$SAMPLES_DIR" \
-    "$(dirname "$LOCK_DIR")"
+    "$(dirname "$LOCK_DIR")" \
+    "${AUTO_ACP_REQUEST_DIR:-$RECOVERY_ROOT/state/auto-acp}"
+}
+
+safe_slug() {
+  local value="${1:-}"
+  value="${value//[^A-Za-z0-9._-]/-}"
+  printf '%s\n' "$value"
+}
+
+sha256_text() {
+  if command -v shasum >/dev/null 2>&1; then
+    printf '%s' "${1:-}" | shasum -a 256 | awk '{print $1}'
+  elif command -v sha256sum >/dev/null 2>&1; then
+    printf '%s' "${1:-}" | sha256sum | awk '{print $1}'
+  else
+    python3 -c 'import hashlib,sys; print(hashlib.sha256(sys.stdin.buffer.read()).hexdigest())' <<<"${1:-}"
+  fi
 }
 
 timestamp_utc() {
@@ -53,6 +73,7 @@ append_note() {
 }
 
 run_openclaw() {
+  # Bash 3.2 + nounset treats an empty array expansion as unbound.
   if [[ -n "${OPENCLAW_PROFILE:-}" ]] && [[ "$OPENCLAW_PROFILE" != "default" ]]; then
     "$CLI_BIN" --profile "$OPENCLAW_PROFILE" "$@"
   else
@@ -62,6 +83,32 @@ run_openclaw() {
 
 gateway_cmd() {
   run_openclaw gateway "$@"
+}
+
+gateway_status_json() {
+  local output=""
+
+  if output="$(gateway_cmd status --json 2>/dev/null)"; then
+    printf '%s\n' "$output"
+    return 0
+  fi
+
+  output="$(gateway_cmd status --json 2>&1 || true)"
+  printf '%s\n' "$output"
+  return 1
+}
+
+gateway_status_deep_json() {
+  local output=""
+
+  if output="$(gateway_cmd status --deep --json 2>/dev/null)"; then
+    printf '%s\n' "$output"
+    return 0
+  fi
+
+  output="$(gateway_cmd status --deep --json 2>&1 || true)"
+  printf '%s\n' "$output"
+  return 1
 }
 
 latest_cli_file_log() {

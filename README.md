@@ -16,7 +16,7 @@ The goal is not to make Gateway immortal. The goal is to make local Gateway fail
 - Keep recovery **external** to the main Gateway service chain.
 - Do not replace the main Gateway LaunchAgent entrypoint with the recovery wrapper.
 - Prefer conservative restart behavior with cooldown / rolling attempt limits.
-- Treat `status --no-probe --json` as the primary health truth when deep probes are noisy.
+- Treat `gateway status --json` as the primary health truth, and keep deep probes auxiliary when they are noisy.
 
 ## Repository layout
 - `recovery/gateway-v04/`
@@ -43,6 +43,10 @@ The goal is not to make Gateway immortal. The goal is to make local Gateway fail
   - generate ACP launch instructions for a bundle
 - `bin/prepare-acp-task.sh`
   - convert a bundle into ACP task payload text for explicit runtime spawn
+- `bin/finalize-acp-handoff.sh`
+  - prepare a full escalation package (bundle + launch instructions + task + manifest)
+- `bin/auto-acp-dispatch.sh` / `bin/run-auto-acp-bridge.sh`
+  - guarded automatic dispatch and bridge execution (acpx first, direct codex fallback on auth mismatch)
 
 ## Health model
 Primary truth is based on:

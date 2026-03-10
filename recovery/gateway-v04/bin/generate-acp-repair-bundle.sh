@@ -17,7 +17,7 @@ cp "$RESULT_FILE" "$BUNDLE_DIR/01-last-result.json" 2>/dev/null || printf '{}' >
 "$TAIL_BIN" -n 200 "$EVENT_FILE" > "$BUNDLE_DIR/02-recover-events.log" 2>/dev/null || true
 "$TAIL_BIN" -n 200 "$ROOT_DIR/logs/watcher.log" > "$BUNDLE_DIR/03-watcher.log" 2>/dev/null || true
 "$TAIL_BIN" -n 200 "$ROOT_DIR/logs/watcher.stderr.log" > "$BUNDLE_DIR/04-watcher.stderr.log" 2>/dev/null || true
-gateway_cmd status --no-probe --json > "$BUNDLE_DIR/05-gateway-status.json" 2>&1 || true
+gateway_status_json > "$BUNDLE_DIR/05-gateway-status.json" 2>&1 || true
 "$LAUNCHCTL_BIN" print "$(launchctl_target)" > "$BUNDLE_DIR/06-launchctl-gateway.txt" 2>&1 || true
 "$LAUNCHCTL_BIN" print "gui/$(recovery_uid)/ai.openclaw.gateway-recovery-watcher" > "$BUNDLE_DIR/07-launchctl-watcher.txt" 2>&1 || true
 

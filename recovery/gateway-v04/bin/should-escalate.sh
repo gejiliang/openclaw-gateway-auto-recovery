@@ -18,6 +18,7 @@ path = sys.argv[1]
 with open(path, 'r', encoding='utf-8') as f:
     data = json.load(f)
 term = data.get('terminal_state')
+action = data.get('action')
 status_after = data.get('status_after')
 
 if term in ('failed', 'escalated', 'recoverer-error'):

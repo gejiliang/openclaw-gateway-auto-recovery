@@ -24,7 +24,7 @@ while (( attempt <= STATUS_CHECK_ATTEMPTS )); do
   probe_degraded=0
   failure_reason=""
 
-  if ! status_output="$(gateway_cmd status --no-probe --json 2>&1)"; then
+  if ! status_output="$(gateway_status_json)"; then
     failure_reason="status_no_probe_failed"
   else
     primary_rc=0
@@ -68,7 +68,7 @@ PY
   fi
 
   if [[ -z "$failure_reason" ]]; then
-    if ! deep_output="$(gateway_cmd status --deep --json 2>&1)"; then
+    if ! deep_output="$(gateway_status_deep_json)"; then
       probe_degraded=1
     else
       deep_rc=0

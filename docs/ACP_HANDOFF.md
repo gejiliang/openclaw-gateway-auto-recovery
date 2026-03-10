@@ -27,11 +27,12 @@ Supported:
 - automatic recovery
 - structured ACP escalation bundle generation
 - explicit operator-triggered ACP runtime spawn
-- pragmatic target-local repair via local Codex wrapper when direct adapter bridging is imperfect
+- guarded automatic bridge execution
+- pragmatic target-local repair via local Codex fallback when direct adapter bridging hits auth-context mismatch
 
 Intentionally avoided:
-- silent watcher-triggered ACP session spawn
-- hidden ACP launch inside recovery core logic
+- silent watcher-triggered ACP session spawn without governance
+- hidden OpenClaw tool-runtime calls from shell scripts pretending to be first-class tools
 
 ## Recommended operator flow
 1. let governed recovery run first
@@ -42,4 +43,4 @@ Intentionally avoided:
 6. explicitly launch an ACP Codex session using the prepared task text
 
 ## Test-environment validation
-The same ACP handoff layers were validated in a Dev/Test VM (`lab-openclaw` / `10.0.0.8`), including explicit ACP Codex runtime spawn acceptance.
+The same ACP handoff layers were validated in a Dev/Test VM (a Dev/Test VM), including explicit ACP Codex runtime spawn acceptance.

@@ -49,7 +49,7 @@ write_lock_owner() {
   "service_label": $(json_escape "$SERVICE_LABEL"),
   "port": $GATEWAY_PORT,
   "profile": $(json_escape "$OPENCLAW_PROFILE"),
-  "hostname": $(json_escape "$($HOSTNAME_BIN)"),
+  "hostname": $(json_escape "$("$HOSTNAME_BIN")"),
   "user": $(json_escape "$USER"),
   "recover_script": $(json_escape "$ROOT_DIR/recover-gateway-v042.sh")
 }
@@ -189,7 +189,10 @@ fi
 
 touch "$ATTEMPT_LOG"
 last_attempt_epoch="$(tail -n 1 "$ATTEMPT_LOG" 2>/dev/null | cut -d' ' -f1 || true)"
-recent_attempts="$(awk -v now="$now_epoch" -v win="$WINDOW_SECONDS" '{ if (now-$1 <= win) c++ } END { print c+0 }' "$ATTEMPT_LOG" 2>/dev/null || echo 0)"
+recent_attempts="$(
+  awk -v now="$now_epoch" -v win="$WINDOW_SECONDS" '{ if (now-$1 <= win) c++ } END { print c+0 }' \
+    "$ATTEMPT_LOG" 2>/dev/null || echo 0
+)"
 
 if [[ "$STATUS_BEFORE" == "failed" ]]; then
   if [[ -n "$last_attempt_epoch" ]] && (( now_epoch - last_attempt_epoch < COOLDOWN_SECONDS )); then
@@ -210,7 +213,9 @@ if [[ "$STATUS_BEFORE" == "failed" ]]; then
         ;;
       port-conflict)
         ACTION="collect-and-escalate"
-        if PORT_CONFLICT_FILE="$("$ADAPTER_BIN_DIR/collect-port-conflict.sh" 2>/dev/null)"; then :; else
+        if PORT_CONFLICT_FILE="$("$ADAPTER_BIN_DIR/collect-port-conflict.sh" 2>/dev/null)"; then
+          :
+        else
           PORT_CONFLICT_FILE=""
           append_note "port conflict collection failed"
         fi
@@ -254,9 +259,20 @@ if [[ "$TERMINAL_STATE" == "pending" ]]; then
   fi
 fi
 
+ACP_HANDOFF_REQUEST=""
+if [[ "$TERMINAL_STATE" == "failed" || "$TERMINAL_STATE" == "escalated" || "$TERMINAL_STATE" == "recoverer-error" || ( "$TERMINAL_STATE" == "governed-skip" && "$STATUS_AFTER" != "healthy" ) ]]; then
+  ACP_HANDOFF_REQUEST="$($ADAPTER_BIN_DIR/finalize-acp-handoff.sh "$RESULT_FILE" 2>/dev/null || true)"
+  if [[ -n "$ACP_HANDOFF_REQUEST" && "$ACP_HANDOFF_REQUEST" != "no-escalation" ]]; then
+    append_note "acp handoff prepared"
+  fi
+fi
+
 write_result
 log_summary
 cat "$RESULT_FILE"
+if [[ -n "${ACP_HANDOFF_REQUEST:-}" && "$ACP_HANDOFF_REQUEST" != "no-escalation" ]]; then
+  printf 'acp_handoff_request=%s\n' "$ACP_HANDOFF_REQUEST"
+fi
 
 if [[ "$ACTION" == "lock-skip" ]]; then
   exit 0

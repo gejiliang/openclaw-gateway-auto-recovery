@@ -18,7 +18,7 @@ This update extends the original external Gateway auto-recovery reference with a
 
 ## Validation
 - local Mini-side generation path verified
-- Dev/Test VM (`lab-openclaw` / `10.0.0.8`) verified for:
+- Dev/Test VM (a Dev/Test VM) verified for:
   - escalation decision
   - repair bundle generation
   - ACP task preparation

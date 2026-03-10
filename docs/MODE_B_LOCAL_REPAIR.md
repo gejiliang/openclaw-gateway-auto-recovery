@@ -6,7 +6,7 @@ Mode B is the target-local ACP/Codex repair path.
 In the ideal model, the target host would run the full ACP/Codex adapter chain locally. In practice, a pragmatic local Codex wrapper can be enough to make the mode usable before every adapter bridge is perfect.
 
 ## What was proven in a real Dev/Test VM
-On `lab-openclaw` (`10.0.0.8`):
+On `a Dev/Test VM` (`<test-vm-ip>`):
 - local `acpx@0.1.15` was installed in an isolated project-local path
 - local `codex` CLI was installed and authenticated
 - direct local `codex exec --skip-git-repo-check ...` worked

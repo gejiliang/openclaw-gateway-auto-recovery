@@ -58,7 +58,9 @@ This repository is a sanitized reference extracted from a real production rollou
 
 ## Start here
 1. Read `docs/RUNBOOK.md`
-2. Read `docs/OPERATIONS.md`
-3. Read `docs/POST_UPGRADE_CHECKLIST.md`
-4. Copy `recovery/gateway-v04/adapter.env.example` to your own local `adapter.env`
-5. Review all host-specific paths before enabling anything
+2. Read `docs/ARCHITECTURE.md`
+3. Read `docs/OPERATIONS.md`
+4. Read `docs/POST_UPGRADE_CHECKLIST.md`
+5. Optional Chinese overview: `docs/README.zh-CN.md`
+6. Copy `recovery/gateway-v04/adapter.env.example` to your own local `adapter.env`
+7. Review all host-specific paths before enabling anything

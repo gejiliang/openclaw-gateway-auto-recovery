@@ -1,6 +1,8 @@
 # OpenClaw Gateway External Auto-Recovery
 
-Reference implementation of an external auto-recovery layer for a local OpenClaw Gateway.
+A sanitized reference implementation of an external auto-recovery layer for a local OpenClaw Gateway.
+
+This repository captures the practical shape of a production-tested design: separate watcher, conservative health truth, restart governance, and day-2 operations docs.
 
 ## Why this exists
 The goal is not to make Gateway immortal. The goal is to make local Gateway failures recoverable with:

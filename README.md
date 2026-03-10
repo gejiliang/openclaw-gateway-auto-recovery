@@ -56,6 +56,9 @@ Deep probe output and `openclaw health` are treated as auxiliary signals only.
 ## Production note
 This repository is a sanitized reference extracted from a real production rollout and drill. Host-specific paths, private config, tokens, and raw operational artifacts were intentionally excluded.
 
+## Repo blurb templates
+Need a short description for GitHub, social sharing, or internal forwarding? See `docs/REPO_BLURBS.md`.
+
 ## Start here
 1. Read `docs/RUNBOOK.md`
 2. Read `docs/ARCHITECTURE.md`
